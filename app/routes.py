@@ -3,6 +3,7 @@ import os
 import json
 import requests
 import pandas as pd
+import markdown as md
 from matplotlib import pyplot as plt
 from bs4 import BeautifulSoup
 from flask import render_template, redirect, url_for, request
@@ -33,7 +34,12 @@ review_elements = {
 
 @app.route('/')
 def index():
-    return render_template("index.html.jinja")
+    if os.path.isfile('README.md'):
+        with open('README.md') as plik_md:
+            plik_md_html = md.markdown(plik_md.read(), extensions=['tables', 'markdown.extensions.fenced_code'])
+    else:
+        plik_md_html = None
+    return render_template("index.html.jinja", md=plik_md_html)
 
 @app.route('/author')
 def author():
